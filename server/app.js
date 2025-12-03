@@ -15,12 +15,13 @@
 // No interpreter in the middle. The CPU can execute it directly, with fewer checks and jumps.
 
 // Result: much faster execution.
-const express = require('express') //Import express library for building webservers in node. 
+const express = require('express'); // CommonJS require
 
-const app = express(); //creates express application instance like a class?
+const app = express(); // creates express application instance like a class?
 
-app.get('/', (req, res) => { //basicially an empty hhtp
+app.get('/', (req, res) => { // basicially an empty http
     console.log("Work");
+    console.log(res.status);
 })
 
-module.exports = app; //the app instance so it can be imported elsewhere.
+module.exports = app; // CommonJS export - the app instance so it can be imported elsewhere.

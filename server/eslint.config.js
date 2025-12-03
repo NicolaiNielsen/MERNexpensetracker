@@ -1,10 +1,19 @@
-import js from "@eslint/js";
-import globals from "globals";
-import pluginReact from "eslint-plugin-react";
-import { defineConfig } from "eslint/config";
+const js = require("@eslint/js");
+const globals = require("globals");
 
-export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs,jsx}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.node } },
-  { files: ["**/*.js"], languageOptions: { sourceType: "module" } },
-  pluginReact.configs.flat.recommended,
-]);
+module.exports = [
+  js.configs.recommended,
+  {
+    files: ["**/*.js"],
+    languageOptions: {
+      globals: globals.node,
+      ecmaVersion: 2022,
+      sourceType: "script"
+    },
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off",
+      "no-undef": "error"
+    }
+  }
+];
