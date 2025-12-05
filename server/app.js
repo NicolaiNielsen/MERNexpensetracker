@@ -20,6 +20,9 @@ require('dotenv').config();
 
 const app = express(); // creates express application cd instance like a class?
 
+//API Routes
+app.use('/api/v2/expenses', )
+
 app.get('/', (req, res) => { // basicially an empty http
     console.log("Work");
     console.log(res.json);
