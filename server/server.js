@@ -12,7 +12,7 @@ const server = app.listen(port, () => {
     console.log("Server is running on port", port)
 });
 
-process.on("SIGINT", async() => {
+process.on("SIGINT", async() => { //SIGNIT tells the process to intterupt Ctrl+C 
     await mongoose.connection.close();
     server.close(()  => {
         process.exit(1)

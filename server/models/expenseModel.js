@@ -39,7 +39,14 @@ const expenseSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+//expenseSchema.pre("save", ...)
+//This tells Mongoose: “Before saving a document to the database, run this function.” pre hooks can modify the document or perform checks before it’s persisted.
+//Document middleware
+
+expenseSchema.pre("save", function(next) {
+    if (this.amount) this.amount = Math.round(this.amount * 100) / 100; //round up to nearest decimal
+    next();
+});
+
 const Expense = mongoose.model("CopyExpense", expenseSchema); //Creates a model tied to a MongoDB collection using your schem
 module.exports = Expense; // Lets other files use this model to interact with the database.
-
-console.log('Expense model created', typeof Expense.find);

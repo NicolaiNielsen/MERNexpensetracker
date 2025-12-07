@@ -16,6 +16,7 @@
 
 // Result: much faster execution.
 const express = require('express'); // CommonJS
+const cors = require('cors'); //library that allows cross client communication my sever
 
 //App  express is an object that gives us evertyhing we need to build a webserver in node
 //allows us to define routes. app.get or app.post
@@ -27,7 +28,11 @@ const expenseRouter = require("./routers/expenseRouters")
 require('dotenv').config();
 
 const app = express(); // creates express application cd instance like a class?
+
+//Middleware aka that functions that sits in the request-response cycle and acces to both th the request and res.
+//App.use is used to register middleware
 app.use(express.json());
+
 //API Routes
 app.use('/api/v2/expenses', expenseRouter)
 
