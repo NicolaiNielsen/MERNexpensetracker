@@ -22,7 +22,7 @@ const express = require('express'); // CommonJS
 // attach middleware app.use cpmtrpæs wjat ajeååems nweween the request and routes.
 // for instance prefixes our '/api/v2/expenses' requests to 
 
-//
+//App.js is blueprint it define 
 const expenseRouter = require("./routers/expenseRouters") 
 require('dotenv').config();
 
