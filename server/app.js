@@ -27,7 +27,7 @@ const expenseRouter = require("./routers/expenseRouters")
 require('dotenv').config();
 
 const app = express(); // creates express application cd instance like a class?
-
+app.use(express.json());
 //API Routes
 app.use('/api/v2/expenses', expenseRouter)
 

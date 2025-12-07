@@ -39,3 +39,7 @@ const expenseSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+const Expense = mongoose.model("CopyExpense", expenseSchema); //Creates a model tied to a MongoDB collection using your schem
+module.exports = Expense; // Lets other files use this model to interact with the database.
+
+console.log('Expense model created', typeof Expense.find);

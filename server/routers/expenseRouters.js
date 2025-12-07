@@ -10,8 +10,15 @@
 ///backend serveren returnerer kode router.get('/', expenseRouter.getAllExpense)
 const express = require('express')
 const router = express.Router();
-const expenseRouter = require("../controllers/expenseControllers")
+const expenseController = require("../controllers/expenseControllers")
 
-router.get('/', expenseRouter.getAllExpense)
+router
+.get('/', expenseController.getAllExpense)
+.post("/", expenseController.createExpense);
+
+router
+.put("/:id", expenseController.updateExpense)
+.delete("/:id", expenseController.deleteExpense);
+
 
 module.exports = router;
