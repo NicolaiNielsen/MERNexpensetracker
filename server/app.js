@@ -32,6 +32,7 @@ const app = express(); // creates express application cd instance like a class?
 //Middleware aka that functions that sits in the request-response cycle and acces to both th the request and res.
 //App.use is used to register middleware
 app.use(express.json());
+app.use(cors());
 
 //API Routes
 app.use('/api/v2/expenses', expenseRouter)

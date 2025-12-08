@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; //React renders Ui then after use use-effects to run functions
 import { DollarSign, Plus, ShoppingCart, TrendingUp } from "lucide-react";
 import StatCard from "./components/StatCard";
 import SpendingChart from "./components/SpendingChart";
@@ -29,8 +29,9 @@ function App() {
         // normalize list safely
         const normalized = (expData || []).map((e) => ({
           ...e,
-          amount: Number(e.amount || 0),
-          category: e.category || "Unknown",
+          date: e
+            ? String(e.date).split("T")[0]
+            : new Date().toISOString().split("T")[0],
         }));
 
         setExpenses(normalized); // or whatever your state setter is
@@ -124,15 +125,15 @@ function App() {
             iconColor="bg-indigo-700"
           />
           <StatCard
-            value={`$${stats.total.toFixed(2)}`} //whats toFixed(2) decimal places
+            value={`$${stats.count}`} //whats toFixed(2) decimal places
             title="Expenses"
             icon={DollarSign}
-            subtitle={"This month"}
+            subtitle={"Number of expenses"}
             bgColor="bg-gradient-to-br from-purple-500 to-purple-600"
             iconColor="bg-purple-700"
           />
           <StatCard
-            value={`$${stats.total.toFixed(2)}`} //whats toFixed(2) decimal places
+            value={`$${stats.avg.toFixed(2)}`} //whats toFixed(2) decimal places
             title="Average"
             icon={TrendingUp}
             subtitle={"This month"}
@@ -140,7 +141,7 @@ function App() {
             iconColor="bg-indigo-700"
           />
           <StatCard
-            value={`$${stats.total.toFixed(2)}`} //whats toFixed(2) decimal places
+            value={`$${stats.highest.toFixed(2)}`} //whats toFixed(2) decimal places
             title="Highest"
             icon={ShoppingCart}
             subtitle={"This month"}
