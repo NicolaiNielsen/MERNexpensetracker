@@ -11,7 +11,7 @@ export const fetchExpenses = async() => {
     return (res.data && res.data.data) || [];
 };
 
-export const createExpense = async() => {
+export const createExpenses = async() => {
     const res = await api.post('/expense')
     return (res.data && res.data.data) || [];
 };
@@ -21,7 +21,7 @@ export const updateExpenses = async(id, payload) => {
     return (res.data && res.data.data) || [];
 };
 
-export const deleteExpense = async(id) => {
+export const deleteExpenses = async(id) => {
     const res = await api.delete(`/expense/${id}`)
     return res.data || null;
 };

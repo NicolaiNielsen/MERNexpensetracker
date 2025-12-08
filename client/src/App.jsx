@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import { DollarSign, Plus, ShoppingCart, TrendingUp } from "lucide-react";
 import StatCard from "./components/StatCard";
 import SpendingChart from "./components/SpendingChart";
 import CategoryChart from "./components/CategoryChart";
 import TransactionList from "./components/TransactionList";
 import Modal from "./components/Modal"; // import your modal
+import { Wallet } from "lucide-react";
 
 import {
   fetchExpenses,
@@ -14,8 +15,35 @@ import {
 } from "./api.js";
 
 function App() {
+  const [expenses, setExpenses] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
-  const [expenses, setExpense] = useState([])
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+
+      try {
+        // call the function
+        const [expData] = await Promise.all([fetchExpenses()]);
+
+        // normalize list safely
+        const normalized = (expData || []).map((e) => ({
+          ...e,
+          amount: Number(e.amount || 0),
+          category: e.category || "Unknown",
+        }));
+
+        setExpenses(normalized); // or whatever your state setter is
+      } catch (error) {
+        console.error("load error", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load(); // IMPORTANT: call the function
+  }, []); // empty array so it runs once
+
   // status card calculations
   const calculationsStats = (expenseList) => {
     // Ensure we have a valid array. If `expenseList` is null/undefined, default to empty array.
@@ -87,7 +115,38 @@ function App() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatCard value={`$${stats.total.toFixed{2}}`} title="Total Spent" icon={wWallet}/>
+          <StatCard
+            value={`$${stats.total.toFixed(2)}`} //whats toFixed(2) decimal places
+            title="Total Spent"
+            icon={Wallet}
+            subtitle={"This month"}
+            bgColor="bg-gradient-to-br from-indigo-500 to-indigo-600"
+            iconColor="bg-indigo-700"
+          />
+          <StatCard
+            value={`$${stats.total.toFixed(2)}`} //whats toFixed(2) decimal places
+            title="Expenses"
+            icon={DollarSign}
+            subtitle={"This month"}
+            bgColor="bg-gradient-to-br from-purple-500 to-purple-600"
+            iconColor="bg-purple-700"
+          />
+          <StatCard
+            value={`$${stats.total.toFixed(2)}`} //whats toFixed(2) decimal places
+            title="Average"
+            icon={TrendingUp}
+            subtitle={"This month"}
+            bgColor="bg-gradient-to-br from-red-500 to-red-600"
+            iconColor="bg-indigo-700"
+          />
+          <StatCard
+            value={`$${stats.total.toFixed(2)}`} //whats toFixed(2) decimal places
+            title="Highest"
+            icon={ShoppingCart}
+            subtitle={"This month"}
+            bgColor="bg-gradient-to-br from-pink-500 to-indigo-600"
+            iconColor="bg-indigo-700"
+          />
         </div>
 
         {/* Charts */}
