@@ -6,7 +6,53 @@ import CategoryChart from "./components/CategoryChart";
 import TransactionList from "./components/TransactionList";
 import Modal from "./components/Modal"; // import your modal
 
+import {
+  fetchExpenses,
+  createExpenses,
+  updateExpenses,
+  deleteExpenses,
+} from "./api.js";
+
 function App() {
+
+  const [expenses, setExpense] = useState([])
+  // status card calculations
+  const calculationsStats = (expenseList) => {
+    // Ensure we have a valid array. If `expenseList` is null/undefined, default to empty array.
+    const list = expenseList || [];
+
+    // Calculate the total sum of all expense amounts.
+    // `reduce` iterates over the array and accumulates the sum.
+    // Number(e.amount || 0) ensures we convert the amount to a number and treat missing amounts as 0.
+    const total = list.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+
+    // Calculate the total per category.
+    // We use reduce to build an object where keys are categories and values are sums of amounts.
+    const categoryTotal = list.reduce((acc, e) => {
+      // If the category already exists in the accumulator, add the amount; otherwise, start with 0.
+      acc[e.category] = (acc[e.category] || 0) + Number(e.amount || 0);
+      return acc; // Return accumulator for next iteration
+    }, {}); // {} is the initial value for the accumulator
+
+    // Find the highest expense amount
+    // If the list is empty, highest is 0
+    const highest =
+      list.length > 0
+        ? Math.max(...list.map((e) => Number(e.amount) || 0)) // Spread the mapped amounts into Math.max
+        : 0;
+
+    // Return an object with all calculated stats
+    return {
+      total, // Total of all expenses
+      count: list.length, // Number of expense entries
+      avg: list.length > 0 ? total / list.length : 0, // Average expense
+      highest, // Highest single expense
+      categoryTotal, // Total per category
+    };
+  };
+
+  const stats = calculationsStats(expenses);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddExpense = (expense) => {
@@ -41,7 +87,7 @@ function App() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatCard />
+          <StatCard value={`$${stats.total.toFixed{2}}`} title="Total Spent" icon={wWallet}/>
         </div>
 
         {/* Charts */}
