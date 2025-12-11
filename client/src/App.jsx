@@ -17,6 +17,63 @@ import {
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { editingExpense, setEditingExpense } = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFIlterCategory] = useState("All");
+
+  const handleAddExpense = async (payloadSearcher) => {
+    try {
+      // Pass payloadSearcher to your createExpenses function if needed
+      const created = await createExpenses(payloadSearcher);
+      if (!created) throw new Error("Could not create expense");
+
+      // Format the date and prepend to the expenses array
+      const formattedExpense = {
+        ...created,
+        date: created.date.split("T")[0],
+      };
+
+      setExpenses((prev) => [formattedExpense, ...prev]);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Create error", error);
+    }
+  };
+
+  const onEdit = (expense) => {
+    setEditingExpense(expense);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveEdit = async (payload) => {
+    if (!editingExpense) return;
+
+    try {
+      const updated = await updateExpenses(editingExpense._id, payload);
+      setExpenses((prev) =>
+        prev.map((e) =>
+          e._id === updated._id
+            ? { ...updated, date: updated.date.split("T")[0] }
+            : e
+        )
+      );
+
+      setEditingExpense(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log("Create error", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this expense")) return;
+    try {
+      await deleteExpenses(id);
+    } catch (error) {
+      console.log("Create error", error);
+    }
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -82,13 +139,6 @@ function App() {
 
   const stats = calculationsStats(expenses);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleAddExpense = (expense) => {
-    console.log("New Expense:", expense);
-    // TODO: add it to your state or API
-  };
-
   return (
     <div className="min-h-screen bg-gray-800">
       {/* Header */}
@@ -125,7 +175,7 @@ function App() {
             iconColor="bg-indigo-700"
           />
           <StatCard
-            value={`$${stats.count}`} //whats toFixed(2) decimal places
+            value={`${stats.count}`} //whats toFixed(2) decimal places
             title="Expenses"
             icon={DollarSign}
             subtitle={"Number of expenses"}
@@ -153,7 +203,7 @@ function App() {
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
           <div className="lg:col-span-3">
-            <SpendingChart />
+            <SpendingChart expense={expenses} />
           </div>
           <div className="lg:col-span-2">
             <CategoryChart />

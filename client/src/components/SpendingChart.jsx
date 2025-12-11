@@ -9,7 +9,27 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function SpendingChart() {
+function SpendingChart({ expenses }) {
+  //last 7 days call
+
+  const Last7Days = [...Array(7)].map((_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (6 - i));
+    return date.toISOString().split("T")[0];
+  });
+
+  const chartData = Last7Days.map((date) => {
+    const dayExpenses = (expenses || []).filter((e) => {
+      const d = e.date ? String(e.date) : "";
+      return d === date;
+    });
+    const amount = dayExpenses.reduce(
+      (sum, e) => sum + Number(e.amount || 0),
+      0
+    );
+    return { date, amount };
+  });
+
   return (
     <div className="bg-white rounded-2xl p-6 shadow-log border-gray-100">
       <div className="flex items-center justify-between mb-6">
@@ -19,7 +39,7 @@ function SpendingChart() {
         </div>
       </div>
       <ResponsiveContainer width="100%" height={260}>
-        <LineChart>
+        <LineChart data={chartData}>
           <defs>
             <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#6366F1" />
