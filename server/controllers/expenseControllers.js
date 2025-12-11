@@ -6,7 +6,7 @@ exports.getAllExpense = async(req, res) => {
         res.json({success: true, count: expense.length, data:expense})
         
     } catch (error) {
-        res.status(500).json({succes: false, message: error.message});
+        res.status(500).json({success: false, message: error.message});
     }
 }
 
@@ -16,9 +16,9 @@ exports.createExpense = async(req, res) => {
         const expense = new Expense({description, amount, category, date})
         const newExpense = await expense.save();
 
-        res.status(201).json({sucess: true, data: newExpense})
+        res.status(201).json({success: true, data: newExpense})
     } catch (error) {
-        res.status(500).json({succes: false, message: error.message});
+        res.status(500).json({success: false, message: error.message});
     }
 }
 
@@ -26,13 +26,13 @@ exports.updateExpense = async(req, res) => {
     try {
         const updateExpense = await Expense.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
 
-        if (!updateExpense) return res.status(404).json({succes: false, message: "Not found"})
+        if (!updateExpense) return res.status(404).json({success: false, message: "Not found"})
 
         console.log("Update function called with params: " + req.params.id);
 
-        res.status(201).json({sucess: true, data: updateExpense});
+        res.status(200).json({success: true, data: updateExpense});
     } catch (error) {
-        res.status(500).json({succes: false, message: error.message});
+        res.status(500).json({success: false, message: error.message});
     }
 };
 
@@ -40,11 +40,11 @@ exports.deleteExpense = async(req, res) => {
     try {
         const deleted = await Expense.findByIdAndDelete(req.params.id);
 
-        if(!deleted) return res.status(404).json({succes: false, message: "Not found"})
+        if(!deleted) return res.status(404).json({success: false, message: "Not found"})
         console.log("Delete function called with params: " + req.params.id);
-        res.status(201).json({sucess: true, data: deleted, message: "Deleted succesfully"})
+        res.status(200).json({success: true, data: deleted, message: "Deleted successfully"})
     } catch (error) {
-        res.status(500).json({succes: false, message: error.message});
+        res.status(500).json({success: false, message: error.message});
     }
 };
 
